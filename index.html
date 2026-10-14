@@ -269,7 +269,7 @@
         </div>
 
         <footer>
-            <strong>CARGA Y SINCRONIZACIÓN AUTOMÁTICA EN TIEMPO REAL CON GOOGLE SHEETS</strong>
+            <strong>SINCRONIZACIÓN AUTOMÁTICA EN TIEMPO REAL CON GOOGLE SHEETS</strong>
         </footer>
     </div>
 
@@ -280,13 +280,14 @@
         };
         const PIN_ACCESO = 'Aprender2027';
 
+        // ENLACES DIRECTOS A LAS DOS NUEVAS HOJAS DE CÁLCULO CREADAS
         const SHEETS_URLS = {
-            alberdi: "https://docs.google.com/spreadsheets/d/1gPo9xyRQF2l9QyjDmoDJsijqDrnIlNU75OUbkzutCho/gviz/tq?tqx=out:csv",
-            echeverria: "https://docs.google.com/spreadsheets/d/1BrocxtrrFKEkvrHOgBtxEgftJ_Bi6SrfSxtQ-6xJF-U/gviz/tq?tqx=out:csv"
+            alberdi: "https://docs.google.com/spreadsheets/d/1TFf0FDtPUibcDz6PhL-xrWEUFluplXIrCAXCEq2hBcY/gviz/tq?tqx=out:csv",
+            echeverria: "https://docs.google.com/spreadsheets/d/10vaZyTCjb38eMz80KoU2NNIcyPO23uHeG35IEpAwL8w/gviz/tq?tqx=out:csv"
         };
 
         let dbData = { alberdi: [], echeverria: [] };
-        let modoActual = 'resumen'; // 'resumen' o 'comparacion'
+        let modoActual = 'resumen';
         let chartInstance = null;
 
         function validarAcceso(event) {
@@ -443,7 +444,7 @@
                     options: { responsive: true, maintainAspectRatio: false }
                 });
             } else {
-                // Modo Comparativo entre Alberdi y Esteban Echeverría
+                // Modo Comparativo
                 const albSerie = anios.map(a => {
                     const v = obtenerValoresFiltro(dbData.alberdi, nivel, area, a);
                     return (v.satisfactorio + v.avanzado).toFixed(1);
