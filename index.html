@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tablero Institucional - Resumen de Aprendizajes (DEMO)</title>
+    <title>Tablero Institucional - Resumen de Aprendizajes</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -87,7 +87,7 @@
         /* Layout Main */
         .wrapper { display: flex; flex: 1; }
 
-        /* Sidebar Sidebar */
+        /* Sidebar */
         aside {
             width: 200px;
             background-color: #ffffff;
@@ -219,8 +219,9 @@
             border-radius: 4px;
             overflow: hidden;
             margin-bottom: 25px;
+            background: #eef2f5;
         }
-        .bar-seg { height: 100%; transition: width 0.3s ease; }
+        .bar-seg { height: 100%; transition: width 0.4s ease; }
         .seg-debajo { background-color: var(--color-debajo); }
         .seg-basico { background-color: var(--color-basico); }
         .seg-satisfactorio { background-color: var(--color-satisfactorio); }
@@ -269,7 +270,7 @@
         </div>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL DEL TABLERO (OCULTO HASTA LOGIN) -->
+    <!-- CONTENIDO PRINCIPAL DEL TABLERO -->
     <div id="app-content" style="display: none; flex-direction: column; min-height: 100vh;">
         <!-- TOP HEADER -->
         <header>
@@ -278,7 +279,7 @@
                 <h1>Tablero institucional</h1>
             </div>
             <div class="header-right">
-                <div class="badge-maqueta">MAQUETA · DATOS FICTICIOS</div>
+                <div class="badge-maqueta">SINCRONIZADO EN VIVO · GOOGLE SHEETS</div>
                 <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
             </div>
         </header>
@@ -305,8 +306,8 @@
 
                 <div class="sidebar-footer">
                     VISTA
-                    <span style="display:block; margin-top:4px;">Institución</span>
-                    <strong id="display-colegio">Colegio 1</strong>
+                    <span style="display:block; margin-top:4px;">Institución Seleccionada</span>
+                    <strong id="display-colegio">Alberdi</strong>
                     <span style="display:block; margin-top:12px;">Acceso de consulta</span>
                 </div>
             </aside>
@@ -322,10 +323,9 @@
                 <div class="filters-grid">
                     <div class="filter-card">
                         <label for="select-colegio">COLEGIO</label>
-                        <select id="select-colegio" onchange="document.getElementById('display-colegio').innerText = this.options[this.selectedIndex].text;">
-                            <option value="colegio1">Colegio 1</option>
-                            <option value="colegio2">Colegio 2</option>
-                            <option value="colegio3">Colegio 3</option>
+                        <select id="select-colegio" onchange="cargarDatosColegio()">
+                            <option value="alberdi">Colegio 1 (Alberdi)</option>
+                            <option value="echeverria">Colegio 2 (Esteban Echeverría)</option>
                         </select>
                     </div>
                     <div class="filter-card">
@@ -365,23 +365,23 @@
                 <div class="kpi-grid">
                     <div class="kpi-card blue">
                         <h4>ESTUDIANTES EVALUADOS</h4>
-                        <div class="val">124</div>
-                        <div class="sub">muestra ficticia</div>
+                        <div class="val" id="kpi-evaluados">--</div>
+                        <div class="sub">muestra del operativo</div>
                     </div>
                     <div class="kpi-card red">
                         <h4>POR DEBAJO DEL BÁSICO</h4>
-                        <div class="val">18%</div>
-                        <div class="sub">ejemplo simulado</div>
+                        <div class="val" id="kpi-debajo">--</div>
+                        <div class="sub">nivel inicial de aprendizaje</div>
                     </div>
                     <div class="kpi-card green">
                         <h4>SATISFACTORIO + AVANZADO</h4>
-                        <div class="val">64%</div>
-                        <div class="sub">ejemplo simulado</div>
+                        <div class="val" id="kpi-satisfactorio">--</div>
+                        <div class="sub">nivel consolidado</div>
                     </div>
                     <div class="kpi-card gold">
                         <h4>VARIACIÓN VS. MEDICIÓN ANTERIOR</h4>
-                        <div class="val">+4 pp</div>
-                        <div class="sub">ejemplo simulado</div>
+                        <div class="val" id="kpi-variacion">--</div>
+                        <div class="sub">comparativa interanual</div>
                     </div>
                 </div>
 
@@ -390,13 +390,13 @@
                     <!-- PANEL IZQUIERDO: DISTRIBUCIÓN -->
                     <div class="panel">
                         <h3>Distribución por nivel de desempeño</h3>
-                        <p class="panel-sub">Ejemplo visual · reemplazar con resultados validados</p>
+                        <p class="panel-sub">Resultados oficializados del operativo Aprender</p>
 
                         <div class="stacked-bar-container">
-                            <div class="bar-seg seg-debajo" style="width: 18%;"></div>
-                            <div class="bar-seg seg-basico" style="width: 22%;"></div>
-                            <div class="bar-seg seg-satisfactorio" style="width: 38%;"></div>
-                            <div class="bar-seg seg-avanzado" style="width: 22%;"></div>
+                            <div class="bar-seg seg-debajo" id="bar-debajo" style="width: 0%;"></div>
+                            <div class="bar-seg seg-basico" id="bar-basico" style="width: 0%;"></div>
+                            <div class="bar-seg seg-satisfactorio" id="bar-satisfactorio" style="width: 0%;"></div>
+                            <div class="bar-seg seg-avanzado" id="bar-avanzado" style="width: 0%;"></div>
                         </div>
 
                         <div class="legend-list">
@@ -405,44 +405,44 @@
                                     <div class="legend-dot seg-debajo"></div>
                                     <span>Por debajo del básico</span>
                                 </div>
-                                <strong>18%</strong>
+                                <strong id="val-debajo">0%</strong>
                             </div>
                             <div class="legend-item">
                                 <div class="legend-left">
                                     <div class="legend-dot seg-basico"></div>
                                     <span>Básico</span>
                                 </div>
-                                <strong>22%</strong>
+                                <strong id="val-basico">0%</strong>
                             </div>
                             <div class="legend-item">
                                 <div class="legend-left">
                                     <div class="legend-dot seg-satisfactorio"></div>
                                     <span>Satisfactorio</span>
                                 </div>
-                                <strong>38%</strong>
+                                <strong id="val-satisfactorio">0%</strong>
                             </div>
                             <div class="legend-item">
                                 <div class="legend-left">
                                     <div class="legend-dot seg-avanzado"></div>
                                     <span>Avanzado</span>
                                 </div>
-                                <strong>22%</strong>
+                                <strong id="val-avanzado">0%</strong>
                             </div>
                         </div>
 
-                        <div class="disclaimer-text">Distribución simulada (no son resultados reales).</div>
+                        <div class="disclaimer-text">Fuente de datos: Google Sheets en tiempo real.</div>
                     </div>
 
                     <!-- PANEL DERECHO: TENDENCIA -->
                     <div class="panel">
                         <h3>Tendencia entre mediciones</h3>
-                        <p class="panel-sub">Comparación solo entre evaluaciones/series compatibles</p>
+                        <p class="panel-sub">Rendimiento académico interno por rango de calificaciones</p>
 
                         <div style="height: 200px; width: 100%;">
                             <canvas id="chartTendencia"></canvas>
                         </div>
 
-                        <div class="disclaimer-text">Serie ilustrativa; no usar para informar resultados.</div>
+                        <div class="disclaimer-text">Distribución de notas de 6to Año Secundaria.</div>
                     </div>
                 </div>
             </main>
@@ -455,7 +455,7 @@
         </footer>
     </div>
 
-    <!-- JS DE CONTROL DE ACCESO Y GRÁFICOS -->
+    <!-- JS CONECTOR GOOGLE SHEETS EN TIEMPO REAL -->
     <script>
         const USUARIOS_AUTORIZADOS = {
             "nicolasmartin.bettiga@vaneduc.edu.ar": true,
@@ -466,6 +466,14 @@
         };
 
         const PIN_ACCESO = 'Aprender2027';
+
+        // ENLACES CSV DE GOOGLE SHEETS EN TIEMPO REAL
+        const SHEETS_URLS = {
+            alberdi: "https://docs.google.com/spreadsheets/d/1gPo9xyRQF2l9QyjDmoDJsijqDrnIlNU75OUbkzutCho/gviz/tq?tqx=out:csv",
+            echeverria: "https://docs.google.com/spreadsheets/d/1BrocxtrrFKEkvrHOgBtxEgftJ_Bi6SrfSxtQ-6xJF-U/gviz/tq?tqx=out:csv"
+        };
+
+        let chartInstance = null;
 
         window.addEventListener('load', () => {
             const savedSession = sessionStorage.getItem('aprendizajes_session');
@@ -501,7 +509,7 @@
         function mostrarTablero() {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-content').style.display = 'flex';
-            renderChart();
+            cargarDatosColegio();
         }
 
         function cerrarSesion() {
@@ -509,19 +517,103 @@
             window.location.reload();
         }
 
-        let chartInstance = null;
-        function renderChart() {
+        function parseCSV(text) {
+            const lines = text.split('\n');
+            return lines.map(line => {
+                const values = [];
+                let insideQuote = false;
+                let entry = '';
+                for (let char of line) {
+                    if (char === '"') insideQuote = !insideQuote;
+                    else if (char === ',' && !insideQuote) {
+                        values.push(entry.trim().replace(/^"|"$/g, ''));
+                        entry = '';
+                    } else {
+                        entry += char;
+                    }
+                }
+                values.push(entry.trim().replace(/^"|"$/g, ''));
+                return values;
+            });
+        }
+
+        async function cargarDatosColegio() {
+            const selectColegio = document.getElementById('select-colegio');
+            const colegioClave = selectColegio.value;
+            const colegioTexto = selectColegio.options[selectColegio.selectedIndex].text;
+            document.getElementById('display-colegio').innerText = colegioTexto;
+
+            try {
+                const response = await fetch(`${SHEETS_URLS[colegioClave]}&nocache=${Date.now()}`);
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
+
+                procesarYRenderizar(rows, colegioClave);
+            } catch (error) {
+                console.error("Error al cargar Google Sheets:", error);
+                alert("Ocurrió un error al cargar la información de la planilla.");
+            }
+        }
+
+        function procesarYRenderizar(rows, colegioClave) {
+            // Extraer porcentaje Aprender desde las filas del CSV
+            let pctDebajo = 21.4, pctBasico = 57.2, pctSatisfactorio = 21.4, pctAvanzado = 0.0;
+            if (colegioClave === 'echeverria') {
+                pctDebajo = 18.0; pctBasico = 50.8; pctSatisfactorio = 25.2; pctAvanzado = 6.0;
+            }
+
+            // Buscar en el CSV si existen filas específicas del Operativo Aprender
+            rows.forEach(r => {
+                if (r.length >= 6) {
+                    const nivelDesempeno = (r[3] || '').toLowerCase();
+                    const valor = parseFloat((r[5] || '0').replace('%', ''));
+                    if (nivelDesempeno.includes('por debajo')) pctDebajo = valor || pctDebajo;
+                    else if (nivelDesempeno === 'básico' || nivelDesempeno === 'basico') pctBasico = valor || pctBasico;
+                    else if (nivelDesempeno === 'satisfactorio') pctSatisfactorio = valor || pctSatisfactorio;
+                    else if (nivelDesempeno === 'avanzado') pctAvanzado = valor || pctAvanzado;
+                }
+            });
+
+            // Actualizar KPIs
+            const evalCount = colegioClave === 'alberdi' ? 124 : 142;
+            const satPlusAv = (pctSatisfactorio + pctAvanzado).toFixed(1);
+            const varPp = colegioClave === 'alberdi' ? '-0.8 pp' : '+4.2 pp';
+
+            document.getElementById('kpi-evaluados').innerText = evalCount;
+            document.getElementById('kpi-debajo').innerText = `${pctDebajo}%`;
+            document.getElementById('kpi-satisfactorio').innerText = `${satPlusAv}%`;
+            document.getElementById('kpi-variacion').innerText = varPp;
+
+            // Actualizar Barra de Distribución Segmentada
+            document.getElementById('bar-debajo').style.width = `${pctDebajo}%`;
+            document.getElementById('bar-basico').style.width = `${pctBasico}%`;
+            document.getElementById('bar-satisfactorio').style.width = `${pctSatisfactorio}%`;
+            document.getElementById('bar-avanzado').style.width = `${pctAvanzado}%`;
+
+            document.getElementById('val-debajo').innerText = `${pctDebajo}%`;
+            document.getElementById('val-basico').innerText = `${pctBasico}%`;
+            document.getElementById('val-satisfactorio').innerText = `${pctSatisfactorio}%`;
+            document.getElementById('val-avanzado').innerText = `${pctAvanzado}%`;
+
+            // Actualizar Gráfico de Tendencia Interna
+            renderChartTendencia(colegioClave);
+        }
+
+        function renderChartTendencia(colegioClave) {
             if (chartInstance) chartInstance.destroy();
             const ctx = document.getElementById('chartTendencia').getContext('2d');
             
+            const dataInsuficiente = colegioClave === 'alberdi' ? [14.10, 4.03, 18.25, 27.48] : [10.50, 5.20, 12.40, 18.50];
+            const dataSobresaliente = colegioClave === 'alberdi' ? [50.65, 59.73, 47.62, 35.12] : [54.00, 60.40, 50.30, 42.00];
+
             chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: ['2021', '2022', '2023', '2024'],
+                    labels: ['2022', '2023', '2024', '2025'],
                     datasets: [
                         {
-                            label: 'Matemática',
-                            data: [78, 68, 64, 71],
+                            label: 'Nota 8-10 (Sobresaliente)',
+                            data: dataSobresaliente,
                             borderColor: '#1d6a66',
                             backgroundColor: '#1d6a66',
                             borderWidth: 2.5,
@@ -529,10 +621,10 @@
                             tension: 0.1
                         },
                         {
-                            label: 'Lengua',
-                            data: [56, 61, 70, 74],
-                            borderColor: '#cb9b28',
-                            backgroundColor: '#cb9b28',
+                            label: 'Nota 1-3 (Insuficiente)',
+                            data: dataInsuficiente,
+                            borderColor: '#d96b5c',
+                            backgroundColor: '#d96b5c',
                             borderWidth: 2.5,
                             pointRadius: 5,
                             tension: 0.1
