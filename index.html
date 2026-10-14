@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tablero Institucional - Resumen de Aprendizajes</title>
+    <title>Tablero Institucional - Resumen de Aprendizajes (DEMO)</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -27,6 +27,35 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Roboto', sans-serif; background: var(--bg-light); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
 
+        /* Pantalla de Login / PIN */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(135deg, var(--header-bg) 0%, #164e6d 100%);
+            display: flex; align-items: center; justify-content: center; z-index: 9999;
+        }
+        .login-card {
+            background: white; padding: 35px 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center; max-width: 420px; width: 90%;
+        }
+        .login-card h2 { font-family: 'Montserrat', sans-serif; font-size: 20px; color: var(--header-bg); margin-bottom: 8px; font-weight: 700; }
+        .login-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.4; }
+        
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--header-bg); margin-bottom: 5px; text-transform: uppercase; }
+        .form-input {
+            width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px;
+            font-size: 13px; outline: none; transition: border-color 0.2s;
+        }
+        .form-input:focus { border-color: var(--color-satisfactorio); }
+
+        .btn-login {
+            background-color: var(--color-satisfactorio); color: white; border: none; padding: 12px 20px;
+            border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700;
+            cursor: pointer; width: 100%; margin-top: 10px; transition: background 0.2s;
+        }
+        .btn-login:hover { background-color: #498875; }
+        .login-error { color: #dc3545; font-size: 12px; margin-top: 15px; display: none; font-weight: 500; text-align: center; }
+
         /* Top Header */
         header {
             background-color: var(--header-bg);
@@ -38,6 +67,7 @@
         }
         .header-title h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #a4c2d4; font-weight: 700; }
         .header-title h1 { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 700; margin-top: 2px; }
+        .header-right { display: flex; align-items: center; gap: 15px; }
         .badge-maqueta {
             background-color: #f7e8b6;
             color: #3d3200;
@@ -48,6 +78,11 @@
             border-radius: 20px;
             letter-spacing: 0.5px;
         }
+        .btn-logout {
+            background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3);
+            padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: background 0.2s;
+        }
+        .btn-logout:hover { background: rgba(255,255,255,0.25); }
 
         /* Layout Main */
         .wrapper { display: flex; flex: 1; }
@@ -212,192 +247,274 @@
 </head>
 <body>
 
-    <!-- TOP HEADER -->
-    <header>
-        <div class="header-title">
-            <h2>APRENDIZAJES</h2>
-            <h1>Tablero institucional</h1>
+    <!-- PANTALLA DE LOGIN / ACCESO CONTROLADO -->
+    <div id="login-screen">
+        <div class="login-card">
+            <h2>Tablero Institucional</h2>
+            <p>Acceso restringido para el equipo directivo y coordinadores de área.</p>
+            
+            <form onsubmit="validarAcceso(event)">
+                <div class="form-group">
+                    <label for="user-email">Correo Institucional</label>
+                    <input type="email" id="user-email" class="form-input" placeholder="usuario@vaneduc.edu.ar" value="nicolasmartin.bettiga@vaneduc.edu.ar" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-pin">PIN de Acceso</label>
+                    <input type="password" id="user-pin" class="form-input" placeholder="••••••••" value="Aprender2027" required>
+                </div>
+                <button type="submit" class="btn-login">Ingresar al Tablero</button>
+            </form>
+
+            <div id="login-error-msg" class="login-error"></div>
         </div>
-        <div class="badge-maqueta">MAQUETA · DATOS FICTICIOS</div>
-    </header>
-
-    <div class="wrapper">
-        <!-- SIDEBAR -->
-        <aside>
-            <a class="nav-item active">
-                <div class="nav-circle"></div>
-                Resumen
-            </a>
-            <a class="nav-item">
-                <div class="nav-circle"></div>
-                Resultados
-            </a>
-            <a class="nav-item">
-                <div class="nav-circle"></div>
-                Comparaciones
-            </a>
-            <a class="nav-item">
-                <div class="nav-circle"></div>
-                Calidad de datos
-            </a>
-
-            <div class="sidebar-footer">
-                VISTA
-                <span style="display:block; margin-top:4px;">Institución</span>
-                <strong id="display-colegio">Colegio 1</strong>
-                <span style="display:block; margin-top:12px;">Acceso de consulta</span>
-            </div>
-        </aside>
-
-        <!-- MAIN CONTENT -->
-        <main>
-            <div class="page-title">
-                <h2>Resumen de aprendizajes</h2>
-                <p>Consulta agregada por evaluación, nivel, área y período</p>
-            </div>
-
-            <!-- FILTROS DESPLEGABLES -->
-            <div class="filters-grid">
-                <div class="filter-card">
-                    <label for="select-colegio">COLEGIO</label>
-                    <select id="select-colegio" onchange="document.getElementById('display-colegio').innerText = this.options[this.selectedIndex].text;">
-                        <option value="colegio1">Colegio 1</option>
-                        <option value="colegio2">Colegio 2</option>
-                        <option value="colegio3">Colegio 3</option>
-                    </select>
-                </div>
-                <div class="filter-card">
-                    <label for="select-anio">AÑO</label>
-                    <select id="select-anio">
-                        <option value="2025">2025</option>
-                        <option value="2024">2024</option>
-                        <option value="2023">2023</option>
-                    </select>
-                </div>
-                <div class="filter-card">
-                    <label for="select-evaluacion">EVALUACIÓN</label>
-                    <select id="select-evaluacion">
-                        <option value="aprender">Aprender</option>
-                        <option value="fesba">FESBA</option>
-                        <option value="tesb">TESB</option>
-                    </select>
-                </div>
-                <div class="filter-card">
-                    <label for="select-nivel">NIVEL</label>
-                    <select id="select-nivel">
-                        <option value="inicial">Inicial</option>
-                        <option value="primaria">Primaria</option>
-                        <option value="secundaria" selected>Secundaria</option>
-                    </select>
-                </div>
-                <div class="filter-card">
-                    <label for="select-area">ÁREA</label>
-                    <select id="select-area">
-                        <option value="matematica" selected>Matemática</option>
-                        <option value="lengua">Lengua</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- CARDS KPI -->
-            <div class="kpi-grid">
-                <div class="kpi-card blue">
-                    <h4>ESTUDIANTES EVALUADOS</h4>
-                    <div class="val">124</div>
-                    <div class="sub">muestra ficticia</div>
-                </div>
-                <div class="kpi-card red">
-                    <h4>POR DEBAJO DEL BÁSICO</h4>
-                    <div class="val">18%</div>
-                    <div class="sub">ejemplo simulado</div>
-                </div>
-                <div class="kpi-card green">
-                    <h4>SATISFACTORIO + AVANZADO</h4>
-                    <div class="val">64%</div>
-                    <div class="sub">ejemplo simulado</div>
-                </div>
-                <div class="kpi-card gold">
-                    <h4>VARIACIÓN VS. MEDICIÓN ANTERIOR</h4>
-                    <div class="val">+4 pp</div>
-                    <div class="sub">ejemplo simulado</div>
-                </div>
-            </div>
-
-            <!-- PANELES Y GRÁFICOS -->
-            <div class="panels-grid">
-                <!-- PANEL IZQUIERDO: DISTRIBUCIÓN -->
-                <div class="panel">
-                    <h3>Distribución por nivel de desempeño</h3>
-                    <p class="panel-sub">Ejemplo visual · reemplazar con resultados validados</p>
-
-                    <div class="stacked-bar-container">
-                        <div class="bar-seg seg-debajo" style="width: 18%;"></div>
-                        <div class="bar-seg seg-basico" style="width: 22%;"></div>
-                        <div class="bar-seg seg-satisfactorio" style="width: 38%;"></div>
-                        <div class="bar-seg seg-avanzado" style="width: 22%;"></div>
-                    </div>
-
-                    <div class="legend-list">
-                        <div class="legend-item">
-                            <div class="legend-left">
-                                <div class="legend-dot seg-debajo"></div>
-                                <span>Por debajo del básico</span>
-                            </div>
-                            <strong>18%</strong>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-left">
-                                <div class="legend-dot seg-basico"></div>
-                                <span>Básico</span>
-                            </div>
-                            <strong>22%</strong>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-left">
-                                <div class="legend-dot seg-satisfactorio"></div>
-                                <span>Satisfactorio</span>
-                            </div>
-                            <strong>38%</strong>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-left">
-                                <div class="legend-dot seg-avanzado"></div>
-                                <span>Avanzado</span>
-                            </div>
-                            <strong>22%</strong>
-                        </div>
-                    </div>
-
-                    <div class="disclaimer-text">Distribución simulada (no son resultados reales).</div>
-                </div>
-
-                <!-- PANEL DERECHO: TENDENCIA -->
-                <div class="panel">
-                    <h3>Tendencia entre mediciones</h3>
-                    <p class="panel-sub">Comparación solo entre evaluaciones/series compatibles</p>
-
-                    <div style="height: 200px; width: 100%;">
-                        <canvas id="chartTendencia"></canvas>
-                    </div>
-
-                    <div class="disclaimer-text">Serie ilustrativa; no usar para informar resultados.</div>
-                </div>
-            </div>
-        </main>
     </div>
 
-    <!-- FOOTER GLOBAL -->
-    <footer>
-        <strong>CARGA PROPUESTA: cantidad evaluada + cantidad por nivel + fuente + observaciones</strong><br>
-        <span style="font-size:10px; color:#5c7285;">Permisos a definir: cada colegio consulta sus datos; coordinación accede a agregados autorizados.</span>
-    </footer>
+    <!-- CONTENIDO PRINCIPAL DEL TABLERO (OCULTO HASTA LOGIN) -->
+    <div id="app-content" style="display: none; flex-direction: column; min-height: 100vh;">
+        <!-- TOP HEADER -->
+        <header>
+            <div class="header-title">
+                <h2>APRENDIZAJES</h2>
+                <h1>Tablero institucional</h1>
+            </div>
+            <div class="header-right">
+                <div class="badge-maqueta">MAQUETA · DATOS FICTICIOS</div>
+                <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+            </div>
+        </header>
 
-    <!-- JS PARA EL GRÁFICO DE LÍNEAS DE TENDENCIA -->
+        <div class="wrapper">
+            <!-- SIDEBAR -->
+            <aside>
+                <a class="nav-item active">
+                    <div class="nav-circle"></div>
+                    Resumen
+                </a>
+                <a class="nav-item">
+                    <div class="nav-circle"></div>
+                    Resultados
+                </a>
+                <a class="nav-item">
+                    <div class="nav-circle"></div>
+                    Comparaciones
+                </a>
+                <a class="nav-item">
+                    <div class="nav-circle"></div>
+                    Calidad de datos
+                </a>
+
+                <div class="sidebar-footer">
+                    VISTA
+                    <span style="display:block; margin-top:4px;">Institución</span>
+                    <strong id="display-colegio">Colegio 1</strong>
+                    <span style="display:block; margin-top:12px;">Acceso de consulta</span>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main>
+                <div class="page-title">
+                    <h2>Resumen de aprendizajes</h2>
+                    <p>Consulta agregada por evaluación, nivel, área y período</p>
+                </div>
+
+                <!-- FILTROS DESPLEGABLES -->
+                <div class="filters-grid">
+                    <div class="filter-card">
+                        <label for="select-colegio">COLEGIO</label>
+                        <select id="select-colegio" onchange="document.getElementById('display-colegio').innerText = this.options[this.selectedIndex].text;">
+                            <option value="colegio1">Colegio 1</option>
+                            <option value="colegio2">Colegio 2</option>
+                            <option value="colegio3">Colegio 3</option>
+                        </select>
+                    </div>
+                    <div class="filter-card">
+                        <label for="select-anio">AÑO</label>
+                        <select id="select-anio">
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                    </div>
+                    <div class="filter-card">
+                        <label for="select-evaluacion">EVALUACIÓN</label>
+                        <select id="select-evaluacion">
+                            <option value="aprender">Aprender</option>
+                            <option value="fesba">FESBA</option>
+                            <option value="tesb">TESB</option>
+                        </select>
+                    </div>
+                    <div class="filter-card">
+                        <label for="select-nivel">NIVEL</label>
+                        <select id="select-nivel">
+                            <option value="inicial">Inicial</option>
+                            <option value="primaria">Primaria</option>
+                            <option value="secundaria" selected>Secundaria</option>
+                        </select>
+                    </div>
+                    <div class="filter-card">
+                        <label for="select-area">ÁREA</label>
+                        <select id="select-area">
+                            <option value="matematica" selected>Matemática</option>
+                            <option value="lengua">Lengua</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- CARDS KPI -->
+                <div class="kpi-grid">
+                    <div class="kpi-card blue">
+                        <h4>ESTUDIANTES EVALUADOS</h4>
+                        <div class="val">124</div>
+                        <div class="sub">muestra ficticia</div>
+                    </div>
+                    <div class="kpi-card red">
+                        <h4>POR DEBAJO DEL BÁSICO</h4>
+                        <div class="val">18%</div>
+                        <div class="sub">ejemplo simulado</div>
+                    </div>
+                    <div class="kpi-card green">
+                        <h4>SATISFACTORIO + AVANZADO</h4>
+                        <div class="val">64%</div>
+                        <div class="sub">ejemplo simulado</div>
+                    </div>
+                    <div class="kpi-card gold">
+                        <h4>VARIACIÓN VS. MEDICIÓN ANTERIOR</h4>
+                        <div class="val">+4 pp</div>
+                        <div class="sub">ejemplo simulado</div>
+                    </div>
+                </div>
+
+                <!-- PANELES Y GRÁFICOS -->
+                <div class="panels-grid">
+                    <!-- PANEL IZQUIERDO: DISTRIBUCIÓN -->
+                    <div class="panel">
+                        <h3>Distribución por nivel de desempeño</h3>
+                        <p class="panel-sub">Ejemplo visual · reemplazar con resultados validados</p>
+
+                        <div class="stacked-bar-container">
+                            <div class="bar-seg seg-debajo" style="width: 18%;"></div>
+                            <div class="bar-seg seg-basico" style="width: 22%;"></div>
+                            <div class="bar-seg seg-satisfactorio" style="width: 38%;"></div>
+                            <div class="bar-seg seg-avanzado" style="width: 22%;"></div>
+                        </div>
+
+                        <div class="legend-list">
+                            <div class="legend-item">
+                                <div class="legend-left">
+                                    <div class="legend-dot seg-debajo"></div>
+                                    <span>Por debajo del básico</span>
+                                </div>
+                                <strong>18%</strong>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-left">
+                                    <div class="legend-dot seg-basico"></div>
+                                    <span>Básico</span>
+                                </div>
+                                <strong>22%</strong>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-left">
+                                    <div class="legend-dot seg-satisfactorio"></div>
+                                    <span>Satisfactorio</span>
+                                </div>
+                                <strong>38%</strong>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-left">
+                                    <div class="legend-dot seg-avanzado"></div>
+                                    <span>Avanzado</span>
+                                </div>
+                                <strong>22%</strong>
+                            </div>
+                        </div>
+
+                        <div class="disclaimer-text">Distribución simulada (no son resultados reales).</div>
+                    </div>
+
+                    <!-- PANEL DERECHO: TENDENCIA -->
+                    <div class="panel">
+                        <h3>Tendencia entre mediciones</h3>
+                        <p class="panel-sub">Comparación solo entre evaluaciones/series compatibles</p>
+
+                        <div style="height: 200px; width: 100%;">
+                            <canvas id="chartTendencia"></canvas>
+                        </div>
+
+                        <div class="disclaimer-text">Serie ilustrativa; no usar para informar resultados.</div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- FOOTER GLOBAL -->
+        <footer>
+            <strong>CARGA PROPUESTA: cantidad evaluada + cantidad por nivel + fuente + observaciones</strong><br>
+            <span style="font-size:10px; color:#5c7285;">Permisos a definir: cada colegio consulta sus datos; coordinación accede a agregados autorizados.</span>
+        </footer>
+    </div>
+
+    <!-- JS DE CONTROL DE ACCESO Y GRÁFICOS -->
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        const USUARIOS_AUTORIZADOS = {
+            "nicolasmartin.bettiga@vaneduc.edu.ar": true,
+            "melina.cociglio@uai.edu.ar": true,
+            "mirnanatalia.soria@vaneduc.edu.ar": true,
+            "danielaalejandra.galeano@vaneduc.edu.ar": true,
+            "mauricio.torres@vaneduc.edu.ar": true
+        };
+
+        const PIN_ACCESO = 'Aprender2027';
+
+        window.addEventListener('load', () => {
+            const savedSession = sessionStorage.getItem('aprendizajes_session');
+            if (savedSession) {
+                mostrarTablero();
+            }
+        });
+
+        function validarAcceso(event) {
+            event.preventDefault();
+            const email = document.getElementById('user-email').value.trim().toLowerCase();
+            const pin = document.getElementById('user-pin').value;
+            const errorDiv = document.getElementById('login-error-msg');
+            
+            errorDiv.style.display = 'none';
+
+            if (!USUARIOS_AUTORIZADOS[email]) {
+                errorDiv.innerText = "Acceso denegado. El correo no está registrado como usuario autorizado.";
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            if (pin !== PIN_ACCESO) {
+                errorDiv.innerText = "PIN o clave de acceso incorrecta.";
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            sessionStorage.setItem('aprendizajes_session', email);
+            mostrarTablero();
+        }
+
+        function mostrarTablero() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-content').style.display = 'flex';
+            renderChart();
+        }
+
+        function cerrarSesion() {
+            sessionStorage.removeItem('aprendizajes_session');
+            window.location.reload();
+        }
+
+        let chartInstance = null;
+        function renderChart() {
+            if (chartInstance) chartInstance.destroy();
             const ctx = document.getElementById('chartTendencia').getContext('2d');
             
-            new Chart(ctx, {
+            chartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: ['2021', '2022', '2023', '2024'],
@@ -439,10 +556,7 @@
                         y: {
                             min: 0,
                             max: 100,
-                            ticks: {
-                                stepSize: 25,
-                                font: { size: 10 }
-                            },
+                            ticks: { stepSize: 25, font: { size: 10 } },
                             grid: { color: '#eef2f5' }
                         },
                         x: {
@@ -452,7 +566,7 @@
                     }
                 }
             });
-        });
+        }
     </script>
 </body>
 </html>
