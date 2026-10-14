@@ -166,10 +166,10 @@
             cursor: pointer;
         }
 
-        /* KPI Grid */
+        /* KPI Grid Porcentual (3 Columnas) */
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 15px;
             margin-bottom: 25px;
         }
@@ -183,7 +183,6 @@
             border-right: 1px solid #eef2f5;
             border-bottom: 1px solid #eef2f5;
         }
-        .kpi-card.blue { border-left-color: #1d6a66; }
         .kpi-card.red { border-left-color: var(--color-debajo); }
         .kpi-card.green { border-left-color: var(--color-satisfactorio); }
         .kpi-card.gold { border-left-color: var(--color-basico); }
@@ -279,7 +278,7 @@
                 <h1>Tablero institucional</h1>
             </div>
             <div class="header-right">
-                <div class="badge-maqueta">SINCRONIZADO EN VIVO · GOOGLE SHEETS</div>
+                <div class="badge-maqueta">SINCRONIZADO EN VIVO · DATOS PORCENTUALES</div>
                 <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
             </div>
         </header>
@@ -316,7 +315,7 @@
             <main>
                 <div class="page-title">
                     <h2>Resumen de aprendizajes</h2>
-                    <p>Consulta agregada por evaluación, nivel, área y período</p>
+                    <p>Consulta porcentual por evaluación, nivel, área y período</p>
                 </div>
 
                 <!-- FILTROS DESPLEGABLES -->
@@ -361,13 +360,8 @@
                     </div>
                 </div>
 
-                <!-- CARDS KPI -->
+                <!-- CARDS KPI PORCENTUALES (3 COLUMNAS) -->
                 <div class="kpi-grid">
-                    <div class="kpi-card blue">
-                        <h4>ESTUDIANTES EVALUADOS</h4>
-                        <div class="val" id="kpi-evaluados">--</div>
-                        <div class="sub">muestra del operativo</div>
-                    </div>
                     <div class="kpi-card red">
                         <h4>POR DEBAJO DEL BÁSICO</h4>
                         <div class="val" id="kpi-debajo">--</div>
@@ -430,7 +424,7 @@
                             </div>
                         </div>
 
-                        <div class="disclaimer-text">Fuente de datos: Google Sheets en tiempo real.</div>
+                        <div class="disclaimer-text">Fuente de datos: Google Sheets Porcentual en tiempo real.</div>
                     </div>
 
                     <!-- PANEL DERECHO: TENDENCIA -->
@@ -442,7 +436,7 @@
                             <canvas id="chartTendencia"></canvas>
                         </div>
 
-                        <div class="disclaimer-text">Distribución de notas de 6to Año Secundaria.</div>
+                        <div class="disclaimer-text">Distribución porcentual de notas (6to Año Secundaria).</div>
                     </div>
                 </div>
             </main>
@@ -450,7 +444,7 @@
 
         <!-- FOOTER GLOBAL -->
         <footer>
-            <strong>CARGA PROPUESTA: cantidad evaluada + cantidad por nivel + fuente + observaciones</strong><br>
+            <strong>CARGA PROPUESTA: porcentajes por nivel + fuente + observaciones</strong><br>
             <span style="font-size:10px; color:#5c7285;">Permisos a definir: cada colegio consulta sus datos; coordinación accede a agregados autorizados.</span>
         </footer>
     </div>
@@ -467,10 +461,10 @@
 
         const PIN_ACCESO = 'Aprender2027';
 
-        // ENLACES CSV DE GOOGLE SHEETS EN TIEMPO REAL
+        // ENLACES CSV DE LAS NUEVAS GOOGLE SHEETS PORCENTUALES
         const SHEETS_URLS = {
-            alberdi: "https://docs.google.com/spreadsheets/d/1gPo9xyRQF2l9QyjDmoDJsijqDrnIlNU75OUbkzutCho/gviz/tq?tqx=out:csv",
-            echeverria: "https://docs.google.com/spreadsheets/d/1BrocxtrrFKEkvrHOgBtxEgftJ_Bi6SrfSxtQ-6xJF-U/gviz/tq?tqx=out:csv"
+            alberdi: "https://docs.google.com/spreadsheets/d/1o4OWFyujLGVmY0Ka3TiwvzxyBhwAIkbUjzQcRbzxF0Y/gviz/tq?tqx=out:csv",
+            echeverria: "https://docs.google.com/spreadsheets/d/1HobuphII-WS7tSbGv_kBilpPlN_YxCoC-eMMT29nZWs/gviz/tq?tqx=out:csv"
         };
 
         let chartInstance = null;
@@ -556,13 +550,12 @@
         }
 
         function procesarYRenderizar(rows, colegioClave) {
-            // Extraer porcentaje Aprender desde las filas del CSV
             let pctDebajo = 21.4, pctBasico = 57.2, pctSatisfactorio = 21.4, pctAvanzado = 0.0;
             if (colegioClave === 'echeverria') {
                 pctDebajo = 18.0; pctBasico = 50.8; pctSatisfactorio = 25.2; pctAvanzado = 6.0;
             }
 
-            // Buscar en el CSV si existen filas específicas del Operativo Aprender
+            // Mapeo dinámico desde las filas del CSV
             rows.forEach(r => {
                 if (r.length >= 6) {
                     const nivelDesempeno = (r[3] || '').toLowerCase();
@@ -574,17 +567,15 @@
                 }
             });
 
-            // Actualizar KPIs
-            const evalCount = colegioClave === 'alberdi' ? 124 : 142;
+            // Actualizar KPIs Porcentuales
             const satPlusAv = (pctSatisfactorio + pctAvanzado).toFixed(1);
             const varPp = colegioClave === 'alberdi' ? '-0.8 pp' : '+4.2 pp';
 
-            document.getElementById('kpi-evaluados').innerText = evalCount;
             document.getElementById('kpi-debajo').innerText = `${pctDebajo}%`;
             document.getElementById('kpi-satisfactorio').innerText = `${satPlusAv}%`;
             document.getElementById('kpi-variacion').innerText = varPp;
 
-            // Actualizar Barra de Distribución Segmentada
+            // Actualizar Barra Segmentada
             document.getElementById('bar-debajo').style.width = `${pctDebajo}%`;
             document.getElementById('bar-basico').style.width = `${pctBasico}%`;
             document.getElementById('bar-satisfactorio').style.width = `${pctSatisfactorio}%`;
@@ -595,7 +586,7 @@
             document.getElementById('val-satisfactorio').innerText = `${pctSatisfactorio}%`;
             document.getElementById('val-avanzado').innerText = `${pctAvanzado}%`;
 
-            // Actualizar Gráfico de Tendencia Interna
+            // Actualizar Gráfico de Tendencia
             renderChartTendencia(colegioClave);
         }
 
