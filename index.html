@@ -26,28 +26,6 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Roboto', sans-serif; background: var(--bg-light); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
 
-        /* Pantalla de Login */
-        #login-screen {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: linear-gradient(135deg, var(--header-bg) 0%, #164e6d 100%);
-            display: flex; align-items: center; justify-content: center; z-index: 9999;
-        }
-        .login-card {
-            background: white; padding: 35px 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            text-align: center; max-width: 420px; width: 90%;
-        }
-        .login-card h2 { font-family: 'Montserrat', sans-serif; font-size: 20px; color: var(--header-bg); margin-bottom: 8px; font-weight: 700; }
-        .login-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.4; }
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--header-bg); margin-bottom: 5px; text-transform: uppercase; }
-        .form-input { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; outline: none; }
-        .btn-login {
-            background-color: var(--color-satisfactorio); color: white; border: none; padding: 12px 20px;
-            border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700;
-            cursor: pointer; width: 100%; margin-top: 10px;
-        }
-        .login-error { color: #dc3545; font-size: 12px; margin-top: 15px; display: none; font-weight: 500; }
-
         /* Header */
         header { background-color: var(--header-bg); color: white; padding: 12px 30px; display: flex; align-items: center; justify-content: space-between; }
         .header-title h2 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #a4c2d4; font-weight: 700; }
@@ -55,7 +33,6 @@
         .header-right { display: flex; align-items: center; gap: 12px; }
         .btn-sync { background-color: #2b8a78; color: white; border: none; padding: 8px 14px; border-radius: 20px; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
         .btn-sync:hover { background-color: #216d5f; }
-        .btn-logout { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; }
 
         /* Layout */
         .wrapper { display: flex; flex: 1; }
@@ -72,7 +49,7 @@
         .page-title p { font-size: 13px; color: var(--text-muted); margin-top: 3px; margin-bottom: 20px; }
 
         /* Filtros */
-        .filters-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+        .filters-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 25px; }
         .filter-card { background: var(--card-bg); border: 1px solid #dcdfe6; border-radius: var(--border-radius); padding: 8px 12px; }
         .filter-card label { display: block; font-size: 9px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px; }
         .filter-card select { width: 100%; border: none; outline: none; background: transparent; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 13px; color: var(--text-main); cursor: pointer; }
@@ -98,7 +75,6 @@
         .panel h3 { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-main); }
         .panel p.panel-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; margin-bottom: 20px; }
 
-        /* Barra Segmentada */
         .stacked-bar-container { display: flex; height: 40px; border-radius: 4px; overflow: hidden; margin-bottom: 20px; background: #eef2f5; }
         .bar-seg { height: 100%; transition: width 0.4s ease; }
         .seg-debajo { background-color: var(--color-debajo); }
@@ -116,28 +92,8 @@
 </head>
 <body>
 
-    <!-- LOGIN -->
-    <div id="login-screen">
-        <div class="login-card">
-            <h2>Tablero Institucional</h2>
-            <p>Acceso restringido para el equipo directivo y coordinadores de área.</p>
-            <form onsubmit="validarAcceso(event)">
-                <div class="form-group">
-                    <label for="user-email">Correo Institucional</label>
-                    <input type="email" id="user-email" class="form-input" value="nicolasmartin.bettiga@vaneduc.edu.ar" required>
-                </div>
-                <div class="form-group">
-                    <label for="user-pin">PIN de Acceso</label>
-                    <input type="password" id="user-pin" class="form-input" value="Aprender2027" required>
-                </div>
-                <button type="submit" class="btn-login">Ingresar al Tablero</button>
-            </form>
-            <div id="login-error-msg" class="login-error"></div>
-        </div>
-    </div>
-
-    <!-- APP CONTENT -->
-    <div id="app-content" style="display: none; flex-direction: column; min-height: 100vh;">
+    <!-- APP CONTENT DIRECTO (ACCESO LIBRE) -->
+    <div id="app-content" style="display: flex; flex-direction: column; min-height: 100vh;">
         <header>
             <div class="header-title">
                 <h2>APRENDIZAJES</h2>
@@ -145,7 +101,6 @@
             </div>
             <div class="header-right">
                 <button class="btn-sync" onclick="forzarSincronizacion()">🔄 Sincronizar Datos</button>
-                <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
             </div>
         </header>
 
@@ -160,7 +115,7 @@
 
                 <div class="sidebar-footer">
                     VISTA
-                    <strong id="display-colegio">Alberdi</strong>
+                    <strong id="display-colegio">Cargando...</strong>
                     <span style="display:block; margin-top:8px;">Modo: <span id="modo-texto">Individual</span></span>
                 </div>
             </aside>
@@ -171,20 +126,27 @@
                     <p id="subtitulo-vista">Consulta agregada por evaluación, nivel, área y ciclo lectivo</p>
                 </div>
 
-                <!-- FILTROS -->
+                <!-- FILTROS DESPLEGABLES -->
                 <div class="filters-grid">
                     <div class="filter-card" id="card-filter-colegio">
                         <label for="select-colegio">COLEGIO</label>
-                        <select id="select-colegio" onchange="aplicarFiltros()">
-                            <option value="alberdi">Colegio 1 (Alberdi)</option>
-                            <option value="echeverria">Colegio 2 (Esteban Echeverría)</option>
+                        <select id="select-colegio" onchange="actualizarOpcionesCiclos(); aplicarFiltros();">
+                            <!-- Se poblará dinámicamente según la planilla -->
+                        </select>
+                    </div>
+                    <div class="filter-card">
+                        <label for="select-evaluacion">EVALUACIÓN</label>
+                        <select id="select-evaluacion" onchange="actualizarOpcionesCiclos(); aplicarFiltros();">
+                            <option value="Aprender" selected>Aprender</option>
+                            <option value="TESBA">TESBA</option>
+                            <option value="FEPBA">FEPBA</option>
                         </select>
                     </div>
                     <div class="filter-card">
                         <label for="select-nivel">NIVEL</label>
-                        <select id="select-nivel" onchange="aplicarFiltros()">
-                            <option value="Primaria">Primaria</option>
-                            <option value="Secundaria" selected>Secundaria</option>
+                        <select id="select-nivel" onchange="actualizarOpcionesCiclos(); aplicarFiltros();">
+                            <option value="Primaria" selected>Primaria</option>
+                            <option value="Secundaria">Secundaria</option>
                         </select>
                     </div>
                     <div class="filter-card">
@@ -197,16 +159,12 @@
                     <div class="filter-card">
                         <label for="select-anio">CICLO LECTIVO</label>
                         <select id="select-anio" onchange="aplicarFiltros()">
-                            <option value="2025">2025</option>
-                            <option value="2024" selected>2024</option>
-                            <option value="2023">2023</option>
-                            <option value="2022">2022</option>
-                            <option value="2021">2021</option>
+                            <!-- Se actualiza según los años registrados -->
                         </select>
                     </div>
                 </div>
 
-                <!-- CARDS PORCENTUALES -->
+                <!-- CARDS KPI -->
                 <div class="kpi-grid">
                     <div class="kpi-card red">
                         <h4>POR DEBAJO DEL BÁSICO</h4>
@@ -229,17 +187,17 @@
                         <div class="sub">nivel destacado</div>
                     </div>
                     <div class="kpi-card blue">
-                        <h4>VAR. VS AÑO PREVIO</h4>
+                        <h4>VAR. VS CICLO ANTERIOR</h4>
                         <div class="val" id="kpi-variacion">-- pp</div>
-                        <div class="sub" id="kpi-variacion-sub">dif. ciclo anterior</div>
+                        <div class="sub" id="kpi-variacion-sub">dif. interanual (Sat+Av)</div>
                     </div>
                 </div>
 
-                <!-- PANELES -->
+                <!-- PANELES Y GRÁFICOS -->
                 <div class="panels-grid">
                     <div class="panel">
                         <h3>Distribución de Desempeño</h3>
-                        <p class="panel-sub">Resultados del ciclo lectivo seleccionado</p>
+                        <p class="panel-sub" id="subtitulo-distribucion">Resultados del operativo seleccionado</p>
 
                         <div class="stacked-bar-container">
                             <div class="bar-seg seg-debajo" id="bar-debajo" style="width: 0%;"></div>
@@ -257,7 +215,7 @@
                     </div>
 
                     <div class="panel">
-                        <h3 id="titulo-grafico">Tendencia entre Ciclos (2021 - 2025)</h3>
+                        <h3 id="titulo-grafico">Tendencia entre Ciclos</h3>
                         <p class="panel-sub" id="subtitulo-grafico">Evolución histórica de niveles alcanzados</p>
 
                         <div style="height: 210px; width: 100%;">
@@ -274,51 +232,16 @@
     </div>
 
     <script>
-        const USUARIOS_AUTORIZADOS = {
-            "nicolasmartin.bettiga@vaneduc.edu.ar": true,
-            "melina.cociglio@uai.edu.ar": true
-        };
-        const PIN_ACCESO = 'Aprender2027';
+        // URL DE LA BASE DE DATOS MADRE UNIFICADA EN GOOGLE DRIVE
+        const MASTER_SHEET_URL = "https://docs.google.com/spreadsheets/d/1ckI7iJcOt_Omm9OPY3vWZKb0OGd9Ss5H339rGlA2boY/gviz/tq?tqx=out:csv";
 
-        // ENLACES DIRECTOS A LAS DOS NUEVAS HOJAS DE CÁLCULO CREADAS
-        const SHEETS_URLS = {
-            alberdi: "https://docs.google.com/spreadsheets/d/1TFf0FDtPUibcDz6PhL-xrWEUFluplXIrCAXCEq2hBcY/gviz/tq?tqx=out:csv",
-            echeverria: "https://docs.google.com/spreadsheets/d/10vaZyTCjb38eMz80KoU2NNIcyPO23uHeG35IEpAwL8w/gviz/tq?tqx=out:csv"
-        };
-
-        let dbData = { alberdi: [], echeverria: [] };
+        let dbRows = [];
         let modoActual = 'resumen';
         let chartInstance = null;
 
-        function validarAcceso(event) {
-            event.preventDefault();
-            const email = document.getElementById('user-email').value.trim().toLowerCase();
-            const pin = document.getElementById('user-pin').value;
-            const errorDiv = document.getElementById('login-error-msg');
-            
-            if (!USUARIOS_AUTORIZADOS[email] || pin !== PIN_ACCESO) {
-                errorDiv.innerText = "Credenciales incorrectas.";
-                errorDiv.style.display = 'block';
-                return;
-            }
-            sessionStorage.setItem('session', email);
-            mostrarTablero();
-        }
-
         window.addEventListener('load', () => {
-            if (sessionStorage.getItem('session')) mostrarTablero();
-        });
-
-        function mostrarTablero() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-content').style.display = 'flex';
             forzarSincronizacion();
-        }
-
-        function cerrarSesion() {
-            sessionStorage.removeItem('session');
-            window.location.reload();
-        }
+        });
 
         function parseCSV(text) {
             const lines = text.split('\n').filter(l => l.trim().length > 0);
@@ -340,17 +263,44 @@
         async function forzarSincronizacion() {
             try {
                 const timestamp = Date.now();
-                const [resAlb, resEch] = await Promise.all([
-                    fetch(`${SHEETS_URLS.alberdi}&nocache=${timestamp}`),
-                    fetch(`${SHEETS_URLS.echeverria}&nocache=${timestamp}`)
-                ]);
+                const res = await fetch(`${MASTER_SHEET_URL}&nocache=${timestamp}`);
+                const text = await res.text();
+                const parsed = parseCSV(text);
                 
-                dbData.alberdi = parseCSV(await resAlb.text());
-                dbData.echeverria = parseCSV(await resEch.text());
+                // Omitir la fila de encabezados
+                dbRows = parsed.slice(1);
                 
+                poblarColegiosDinamicos();
+                actualizarOpcionesCiclos();
                 aplicarFiltros();
             } catch (err) {
                 console.error("Error al sincronizar Google Sheets:", err);
+            }
+        }
+
+        function poblarColegiosDinamicos() {
+            const selectColegio = document.getElementById('select-colegio');
+            const colegioPrevio = selectColegio.value;
+            
+            let colegiosSet = new Set();
+            dbRows.forEach(r => {
+                if (r[0] && r[0].trim().length > 0) {
+                    colegiosSet.add(r[0].trim());
+                }
+            });
+
+            selectColegio.innerHTML = '';
+            const colegiosArr = Array.from(colegiosSet).sort();
+            
+            colegiosArr.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c;
+                opt.innerText = c;
+                selectColegio.appendChild(opt);
+            });
+
+            if (colegiosArr.includes(colegioPrevio)) {
+                selectColegio.value = colegioPrevio;
             }
         }
 
@@ -362,42 +312,108 @@
             document.getElementById('modo-texto').innerText = modo === 'resumen' ? 'Individual' : 'Comparativo';
             
             document.getElementById('titulo-vista').innerText = modo === 'resumen' ? 'Resumen de aprendizajes' : 'Comparativa de Aprendizajes entre Escuelas';
-            document.getElementById('subtitulo-vista').innerText = modo === 'resumen' ? 'Consulta por colegio, nivel, área y ciclo lectivo' : 'Comparación directiva Alberdi vs Esteban Echeverría';
+            document.getElementById('subtitulo-vista').innerText = modo === 'resumen' ? 'Consulta por colegio, evaluación, nivel, área y ciclo lectivo' : 'Comparación directiva entre escuelas';
             
+            actualizarOpcionesCiclos();
             aplicarFiltros();
         }
 
-        function obtenerValoresFiltro(rows, nivel, area, anio) {
-            for (let r of rows) {
-                if (r[0] === nivel && r[1] === area && r[2] === anio) {
+        function actualizarOpcionesCiclos() {
+            const colegioSel = document.getElementById('select-colegio').value;
+            const evalSel = document.getElementById('select-evaluacion').value;
+            const nivelSel = document.getElementById('select-nivel').value;
+            const selectAnio = document.getElementById('select-anio');
+
+            let aniosSet = new Set();
+            dbRows.forEach(r => {
+                const col = r[0] || '', ev = r[1] || '', niv = r[2] || '', anio = r[4] || '';
+                if (ev.toLowerCase() === evalSel.toLowerCase() && niv.toLowerCase() === nivelSel.toLowerCase()) {
+                    if (modoActual === 'resumen') {
+                        if (col.toLowerCase() === colegioSel.toLowerCase()) aniosSet.add(anio);
+                    } else {
+                        aniosSet.add(anio);
+                    }
+                }
+            });
+
+            const aniosArr = Array.from(aniosSet).sort().reverse();
+            selectAnio.innerHTML = '';
+            
+            if (aniosArr.length === 0) {
+                selectAnio.innerHTML = '<option value="">Sin datos</option>';
+            } else {
+                aniosArr.forEach(a => {
+                    const opt = document.createElement('option');
+                    opt.value = a;
+                    opt.innerText = a;
+                    selectAnio.appendChild(opt);
+                });
+            }
+        }
+
+        function obtenerValoresFiltro(colegio, evalNombre, nivel, area, anio) {
+            for (let r of dbRows) {
+                if (r[0] && r[0].toLowerCase() === colegio.toLowerCase() &&
+                    r[1] && r[1].toLowerCase() === evalNombre.toLowerCase() &&
+                    r[2] && r[2].toLowerCase() === nivel.toLowerCase() &&
+                    r[3] && r[3].toLowerCase() === area.toLowerCase() &&
+                    r[4] === anio) {
                     return {
-                        debajo: parseFloat((r[3] || '0').replace('%', '')),
-                        basico: parseFloat((r[4] || '0').replace('%', '')),
-                        satisfactorio: parseFloat((r[5] || '0').replace('%', '')),
-                        avanzado: parseFloat((r[6] || '0').replace('%', ''))
+                        debajo: parseFloat((r[5] || '0').replace('%', '')),
+                        basico: parseFloat((r[6] || '0').replace('%', '')),
+                        satisfactorio: parseFloat((r[7] || '0').replace('%', '')),
+                        avanzado: parseFloat((r[8] || '0').replace('%', ''))
                     };
                 }
             }
-            return { debajo: 0, basico: 0, satisfactorio: 0, avanzado: 0 };
+            return null;
         }
 
         function aplicarFiltros() {
-            const colegioSel = document.getElementById('select-colegio').value;
+            const colegioSel = document.getElementById('select-colegio').value || 'Alberdi';
+            const evalSel = document.getElementById('select-evaluacion').value;
             const nivelSel = document.getElementById('select-nivel').value;
             const areaSel = document.getElementById('select-area').value;
             const anioSel = document.getElementById('select-anio').value;
 
-            document.getElementById('display-colegio').innerText = colegioSel === 'alberdi' ? 'Alberdi' : 'Esteban Echeverría';
+            document.getElementById('display-colegio').innerText = modoActual === 'resumen' ? colegioSel : 'Comparativa Lado a Lado';
 
-            const dataColegio = dbData[colegioSel];
-            const valsActual = obtenerValoresFiltro(dataColegio, nivelSel, areaSel, anioSel);
+            const valsActual = obtenerValoresFiltro(colegioSel, evalSel, nivelSel, areaSel, anioSel);
             
-            // Variación vs año previo
-            const anioPrevio = (parseInt(anioSel) - 1).toString();
-            const valsPrevio = obtenerValoresFiltro(dataColegio, nivelSel, areaSel, anioPrevio);
-            const satAvActual = valsActual.satisfactorio + valsActual.avanzado;
-            const satAvPrevio = valsPrevio.satisfactorio + valsPrevio.avanzado;
-            const diffPp = (satAvActual - satAvPrevio).toFixed(1);
+            if (!valsActual) {
+                document.getElementById('kpi-debajo').innerText = '--%';
+                document.getElementById('kpi-basico').innerText = '--%';
+                document.getElementById('kpi-satisfactorio').innerText = '--%';
+                document.getElementById('kpi-avanzado').innerText = '--%';
+                document.getElementById('kpi-variacion').innerText = '-- pp';
+                
+                document.getElementById('bar-debajo').style.width = '0%';
+                document.getElementById('bar-basico').style.width = '0%';
+                document.getElementById('bar-satisfactorio').style.width = '0%';
+                document.getElementById('bar-avanzado').style.width = '0%';
+
+                document.getElementById('val-debajo').innerText = '0%';
+                document.getElementById('val-basico').innerText = '0%';
+                document.getElementById('val-satisfactorio').innerText = '0%';
+                document.getElementById('val-avanzado').innerText = '0%';
+
+                renderChart(evalSel, nivelSel, areaSel, colegioSel);
+                return;
+            }
+
+            const selectAnioOpts = Array.from(document.getElementById('select-anio').options).map(o => o.value);
+            const idxAnioActual = selectAnioOpts.indexOf(anioSel);
+            let diffPp = '0.0';
+            
+            if (idxAnioActual < selectAnioOpts.length - 1) {
+                const anioAnterior = selectAnioOpts[idxAnioActual + 1];
+                const valsAnterior = obtenerValoresFiltro(colegioSel, evalSel, nivelSel, areaSel, anioAnterior);
+                if (valsAnterior) {
+                    const satAvActual = valsActual.satisfactorio + valsActual.avanzado;
+                    const satAvAnterior = valsAnterior.satisfactorio + valsAnterior.avanzado;
+                    diffPp = (satAvActual - satAvAnterior).toFixed(1);
+                }
+            }
 
             document.getElementById('kpi-debajo').innerText = `${valsActual.debajo}%`;
             document.getElementById('kpi-basico').innerText = `${valsActual.basico}%`;
@@ -405,7 +421,6 @@
             document.getElementById('kpi-avanzado').innerText = `${valsActual.avanzado}%`;
             document.getElementById('kpi-variacion').innerText = `${diffPp > 0 ? '+' : ''}${diffPp} pp`;
 
-            // Barra segmentada
             document.getElementById('bar-debajo').style.width = `${valsActual.debajo}%`;
             document.getElementById('bar-basico').style.width = `${valsActual.basico}%`;
             document.getElementById('bar-satisfactorio').style.width = `${valsActual.satisfactorio}%`;
@@ -416,26 +431,29 @@
             document.getElementById('val-satisfactorio').innerText = `${valsActual.satisfactorio}%`;
             document.getElementById('val-avanzado').innerText = `${valsActual.avanzado}%`;
 
-            renderChart(nivelSel, areaSel, colegioSel);
+            renderChart(evalSel, nivelSel, areaSel, colegioSel);
         }
 
-        function renderChart(nivel, area, colegio) {
+        function renderChart(evalNombre, nivel, area, colegio) {
             if (chartInstance) chartInstance.destroy();
             const ctx = document.getElementById('chartTendencia').getContext('2d');
-            const anios = ['2021', '2022', '2023', '2024', '2025'];
+            
+            const selectAnioOpts = Array.from(document.getElementById('select-anio').options).map(o => o.value).reverse();
 
             if (modoActual === 'resumen') {
-                const dataColegio = dbData[colegio];
-                const satAvSerie = anios.map(a => {
-                    const v = obtenerValoresFiltro(dataColegio, nivel, area, a);
-                    return (v.satisfactorio + v.avanzado).toFixed(1);
+                const satAvSerie = selectAnioOpts.map(a => {
+                    const v = obtenerValoresFiltro(colegio, evalNombre, nivel, area, a);
+                    return v ? (v.satisfactorio + v.avanzado).toFixed(1) : 0;
                 });
-                const debajoSerie = anios.map(a => obtenerValoresFiltro(dataColegio, nivel, area, a).debajo.toFixed(1));
+                const debajoSerie = selectAnioOpts.map(a => {
+                    const v = obtenerValoresFiltro(colegio, evalNombre, nivel, area, a);
+                    return v ? v.debajo.toFixed(1) : 0;
+                });
 
                 chartInstance = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: anios,
+                        labels: selectAnioOpts,
                         datasets: [
                             { label: 'Satisfactorio + Avanzado (%)', data: satAvSerie, borderColor: '#1d6a66', backgroundColor: '#1d6a66', borderWidth: 2.5, pointRadius: 5 },
                             { label: 'Por debajo del básico (%)', data: debajoSerie, borderColor: '#d96b5c', backgroundColor: '#d96b5c', borderWidth: 2.5, pointRadius: 5 }
@@ -444,25 +462,28 @@
                     options: { responsive: true, maintainAspectRatio: false }
                 });
             } else {
-                // Modo Comparativo
-                const albSerie = anios.map(a => {
-                    const v = obtenerValoresFiltro(dbData.alberdi, nivel, area, a);
-                    return (v.satisfactorio + v.avanzado).toFixed(1);
-                });
-                const echSerie = anios.map(a => {
-                    const v = obtenerValoresFiltro(dbData.echeverria, nivel, area, a);
-                    return (v.satisfactorio + v.avanzado).toFixed(1);
+                const selectColegioOpts = Array.from(document.getElementById('select-colegio').options).map(o => o.value);
+                const colores = ['#1d6a66', '#2b8a78', '#d96b5c', '#cb9b28'];
+
+                const datasetsComp = selectColegioOpts.map((colName, idx) => {
+                    const serie = selectAnioOpts.map(a => {
+                        const v = obtenerValoresFiltro(colName, evalNombre, nivel, area, a);
+                        return v ? (v.satisfactorio + v.avanzado).toFixed(1) : 0;
+                    });
+                    return {
+                        label: `${colName} (Sat + Av %)`,
+                        data: serie,
+                        borderColor: colores[idx % colores.length],
+                        backgroundColor: colores[idx % colores.length],
+                        borderWidth: 2.5,
+                        pointRadius: 5,
+                        borderDash: idx > 0 ? [5, 5] : []
+                    };
                 });
 
                 chartInstance = new Chart(ctx, {
                     type: 'line',
-                    data: {
-                        labels: anios,
-                        datasets: [
-                            { label: 'Alberdi (Sat + Avanzado %)', data: albSerie, borderColor: '#1d6a66', backgroundColor: '#1d6a66', borderWidth: 2.5, pointRadius: 5 },
-                            { label: 'Echeverría (Sat + Avanzado %)', data: echSerie, borderColor: '#2b8a78', backgroundColor: '#2b8a78', borderWidth: 2.5, pointRadius: 5, borderDash: [5, 5] }
-                        ]
-                    },
+                    data: { labels: selectAnioOpts, datasets: datasetsComp },
                     options: { responsive: true, maintainAspectRatio: false }
                 });
             }
